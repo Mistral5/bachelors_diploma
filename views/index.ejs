@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>free reAl estAte</title>
+  <!-- fontawesome -->
+  <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"> -->
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"> -->
+  <!-- leaflet CSS -->
+  <link rel="stylesheet" href="/css/leaflet.css">
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <!-- Мой -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- header -->
+  <%- include("header.ejs") %>
+
+  <!-- Main -->
+  <main>
+    <!-- section_info -->
+    <section class="section_info pb-3">
+      <% for (let i = 0; i < info.length; i++) { %>
+        <div class="post-item p-3">
+          <div class="item-content h-100 d-flex flex-column justify-content-center p-4">
+            <div class="item-body">
+              <h3><%= info_title[i] %></h3>
+              <p class="m-0"><%= info[i] %></p>
+            </div>
+            <span class="link pt-3">&emsp;</span>
+          </div>
+        </div>
+        <% } %>
+      </section>
+
+
+      <!-- section_tool -->
+      <section class="section_tool section__header-line">
+        <div class="pt-3 px-3">
+          <h3 class="m-0">Категории объектов</h3>
+        </div>
+
+        <div class="section_map__btn d-flex justify-content-center mx-auto p-3">
+          <% for (let i = 0; i < type.length; i++) { %>
+            <input type="radio" class="btn-check" name="btnCategoryGroup" id='<%= type[i].name %>' onclick="chooseCategory(id);" autocomplete="off">
+            <label class="button btn-style m-1" for='<%= type[i].name %>'><%= type[i].nameRu %></label>
+          <% } %>
+            <input type="radio" class="btn-check" name="btnCategoryGroup" id="all" onclick="chooseCategory(id);" autocomplete="" onload="chooseCategory(id);">
+            <label class="button btn-style m-1" for="all">Отобразить все объекты</label>
+
+            <div class="btn-style m-1">
+              <div class="form-switch d-flex align-items-center">
+                <input class="form-check-switch" type="checkbox" id="uik" onchange="uikSwitch()" onload="" autocomplete="off">
+                <label class="form-check-label button" for="uik">Отобразить избирательные участки</label>
+              </div>
+            </div>
+
+            <div class="btn-style m-1">
+              <div class="form-switch d-flex align-items-center">
+                <input class="form-check-switch" type="checkbox" id="realty" onchange="realtySwitch()" onload="" autocomplete="off">
+                <label class="form-check-label button" for="realty">Отобразить доступные объекты</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- section_map -->
+      <section class="section_map">
+        <div class="wrapper active">
+          <div id="map" class="map">
+            <form class="form">
+              <input id="square" type="number" class="form__field" placeholder="Введите площадь" />
+              <button type="button" class="form__btn btn-style" onclick="chooseSquare();" onchange="chooseSquare();" autocomplete="off">Начать</button>
+            </form>
+
+            <div class="sidebar d-none d-md-block">
+              <div id="menuSidebar" class="px-3"></div>
+            </div>
+
+            <div class="arrow d-none d-md-flex justify-content-center align-items-center">
+              <img id="caret" src="/images/caret-left-fill.svg" alt=" ">
+            </div>
+          </div>
+        </div>
+
+        <div id="facilityCarousel" class="sidebar my-3 d-md-none">
+          <div class="carousel--header p-3 px-3">
+            <h3 class="m-0">Конкуренция в выбранной категории</h3>
+          </div>
+          <div id="carouselFacilityWithControls" class="carousel slide d-flex justify-content-center" data-bs-ride="carousel">
+            <div id="menuFacilityCarousel" class="carousel-inner w-75"></div>
+            <a class="carousel-control-left" href="#carouselFacilityWithControls" role="button" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </a>
+            <a class="carousel-control-right" href="#carouselFacilityWithControls" role="button" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+
+        <div id="realtyCarousel" class="my-3">
+          <div class="carousel--header p-3 px-3">
+            <h3 class="m-0">Варианты недвижимости</h3>
+          </div>
+          <div id="carouselRealtyWithControls" class=" carousel slide d-flex justify-content-center" data-bs-ride="carousel">
+            <div id="menuRealtyCarousel" class="carousel-inner w-75"></div>
+            <a class="carousel-control-left" href="#carouselRealtyWithControls" role="button" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </a>
+            <a class="carousel-control-right" href="#carouselRealtyWithControls" role="button" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bootstrap JS отдельно от Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    <!-- leaflet JS -->
+    <script type="text/javascript" src="/js/leaflet.js"></script>
+    <!-- Мой -->
+    <script type="text/javascript" src="/js/script.js"></script>
+  </body>
+  </html>
